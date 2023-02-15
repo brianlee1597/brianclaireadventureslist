@@ -6,7 +6,7 @@ export default function handler (req, res) {
     makeshiftDB.todos[i].url = req.body.url;
 
     return res.status(200).json({
-        message: "success",
+        message: "success"
     })
   }
 
