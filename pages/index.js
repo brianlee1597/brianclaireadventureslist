@@ -144,7 +144,7 @@ export default function Home() {
                     fontSize="smaller" placeholder="add google maps link"/>
                     <InputRightAddon 
                     onClick={() => addMapsUrl(a.name, state[i])}
-                    children='Add' />
+                    >Add</InputRightAddon>
                   </InputGroup>}
                 </Flex>
                 <CloseIcon 
