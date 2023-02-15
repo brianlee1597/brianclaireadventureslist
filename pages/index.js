@@ -4,6 +4,7 @@ import axios from "axios";
 import { useSetState } from "react-use";
 import { Grid, Text, Box, Input, Stack, Flex, Heading, Button, Divider, InputGroup, InputRightAddon, Link } from "@chakra-ui/react";
 import { CloseIcon, ExternalLinkIcon } from '@chakra-ui/icons'
+import CBALHeading from "../components/main/heading";
 
 const getTodos = "api/get_todos";
 const fetcher = (string) => fetch(string).then(r => r.json());
@@ -86,16 +87,7 @@ export default function Home() {
 
   return (
     <Flex direction="column" width="100%">
-      <Heading 
-        fontSize="3em" 
-        color="purple.600" 
-        width="100%"
-        textAlign="center"
-        padding="1em 0"
-        cursor="default"
-        fontWeight="500">
-        Claire and Brian's Adventure List
-      </Heading>
+      <CBALHeading/>
       <Grid templateColumns="3fr 2fr" columnGap="2em">
         <Flex 
           direction="column"
