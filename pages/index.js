@@ -1,14 +1,17 @@
 import useSWR, { mutate } from "swr";
 import { useRef } from "react";
 import axios from "axios"; 
-import { Grid, Text, Box, Input, Stack, Flex, Heading, Button, Divider } from "@chakra-ui/react";
-import { CloseIcon } from '@chakra-ui/icons'
+import { useSetState } from "react-use";
+import { Grid, Text, Box, Input, Stack, Flex, Heading, Button, Divider, InputGroup, InputRightAddon, Link } from "@chakra-ui/react";
+import { CloseIcon, ExternalLinkIcon } from '@chakra-ui/icons'
 
 const getTodos = "api/get_todos";
 const fetcher = (string) => fetch(string).then(r => r.json());
 
 export default function Home() {
   const { data, error } = useSWR(getTodos, fetcher);
+
+  const [state, setState] = useSetState({});
 
   const todoRef = useRef();
 
@@ -32,10 +35,10 @@ export default function Home() {
     todoRef.current.value = "";
   }
 
-  const deleteTodo = async (name) => {
+  const deleteTodo = async (name, url) => {
     try {
       await axios.post("/api/delete_todo", {
-        name,
+        name, url
       });
     } catch (e) {
       alert("please try again");
@@ -56,6 +59,27 @@ export default function Home() {
     }
 
     mutate(getTodos);
+  }
+
+  const addMapsUrl = async (name, url) => {
+    if (!url || url.length == 0) {
+      alert("can't add nothing");
+      return;
+    }
+
+    try {
+      await axios.post("/api/add_maps", {
+        name, url
+      }) 
+    } catch (e) {
+      alert("something went wrong, please try again");
+    }
+
+    mutate(getTodos);
+   }
+
+  const updateState = (url, i) => {
+    setState({ [i]: url });
   }
 
   if (error || !data) return <></>;
@@ -97,9 +121,9 @@ export default function Home() {
             onClick={addTodo}>add</Button>
           </Grid>
           <Stack direction="column" gap="0.75em" height="30em" overflowY="scroll">
-            {data.todos.map(a => (
+            {data.todos.map((a, i) => (
               <Stack 
-              onClick={() => getDetails(a.name)}
+              // onClick={() => getDetails(a.name)}
               cursor="pointer"
               position="relative"
               borderRadius="md"
@@ -111,12 +135,27 @@ export default function Home() {
                 <Divider orientation='vertical' />
                 <Flex direction="column" justifyContent="space-evenly">
                   <Text paddingLeft="0.35em">{a.name}</Text>
-                  <Input 
-                  height="40%" min-width="250px" max-width="300px" width="300px" 
-                  fontSize="smaller" placeholder="add google maps link"/>
+                  {a.url ? (
+                    <Link 
+                    paddingLeft="0.35em"
+                    fontSize="0.9em"
+                    color="gray.600"
+                    href={a.url} isExternal>
+                    {a.url} <ExternalLinkIcon ml="2px" mb="3px"/>
+                    </Link>
+                  ) :
+                  <InputGroup size="sm">
+                    <Input 
+                    onChange={(e) => updateState(e.target.value, i)}
+                    min-width="250px" max-width="300px" width="300px" 
+                    fontSize="smaller" placeholder="add google maps link"/>
+                    <InputRightAddon 
+                    onClick={() => addMapsUrl(a.name, state[i])}
+                    children='Add' />
+                  </InputGroup>}
                 </Flex>
                 <CloseIcon 
-                onClick={() => deleteTodo(a.name)}               
+                onClick={() => deleteTodo(a.name, a.url)}            
                 cursor="pointer"
                 position="absolute" 
                 right="3em" top="43px"/>

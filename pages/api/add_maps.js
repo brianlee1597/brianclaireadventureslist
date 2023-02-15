@@ -16,11 +16,18 @@ async function handler(req, res) {
 
     db.data ||= { todos: [] }
 
-    const index = db.data.todos.indexOf(JSON.stringify({ name: req.body.name, url: req.body.url }));
+    const data = JSON.stringify({ name: req.body.name });
+    
+    if (!db.data.todos.includes(data))
+        return res.status(400).json({
+            message: "cannot find this restaurant on your list"
+        })
+    
+    const index = db.data.todos.indexOf(data);
 
-    if (index > -1) { 
-      db.data.todos.splice(index, 1);
-    }
+    db.data.todos[index] = JSON.stringify({ 
+        name: req.body.name, url: req.body.url 
+    });
 
     await db.write();
 
@@ -29,7 +36,7 @@ async function handler(req, res) {
     })
   } catch {
     res.status(400).json({
-      message: "error fetching todo, try again"
+      message: "error adding todo, try again"
     })
   }
 }
