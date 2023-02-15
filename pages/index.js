@@ -36,10 +36,10 @@ export default function Home() {
     todoRef.current.value = "";
   }
 
-  const deleteTodo = async (name, url) => {
+  const deleteTodo = async (name) => {
     try {
       await axios.post("/api/delete_todo", {
-        name, url
+        name
       });
     } catch (e) {
       alert("please try again");
@@ -85,6 +85,49 @@ export default function Home() {
 
   if (error || !data) return <></>;
 
+  const ToDo = (a, i) => {
+    return (
+      <Stack 
+      // onClick={() => getDetails(a.name)}
+      cursor="pointer"
+      position="relative"
+      borderRadius="md"
+      boxShadow="rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;"
+      direction='row' h='100px' minH="100px" p={4} bg="#ffffff">
+        <Grid 
+        placeItems="center"
+        width="50px" height="auto">||</Grid>
+        <Divider orientation='vertical' />
+        <Flex direction="column" justifyContent="space-evenly">
+          <Text paddingLeft="0.35em">{a.name}</Text>
+          {a.url ? (
+            <Link 
+            paddingLeft="0.35em"
+            fontSize="0.9em"
+            color="gray.600"
+            href={a.url} isExternal>
+            {a.url} <ExternalLinkIcon ml="2px" mb="3px"/>
+            </Link>
+          ) :
+          <InputGroup size="sm">
+            <Input 
+            onChange={(e) => updateState(e.target.value, i)}
+            min-width="250px" max-width="300px" width="300px" 
+            fontSize="smaller" placeholder="add google maps link"/>
+            <InputRightAddon 
+            onClick={() => addMapsUrl(a.name, state[i])}
+            >Add</InputRightAddon>
+          </InputGroup>}
+        </Flex>
+        <CloseIcon 
+        onClick={() => deleteTodo(a.name)}            
+        cursor="pointer"
+        position="absolute" 
+        right="3em" top="43px"/>
+      </Stack>
+    )
+  }
+
   return (
     <Flex direction="column" width="100%">
       <CBALHeading/>
@@ -126,7 +169,7 @@ export default function Home() {
                 placeItems="center"
                 width="50px" height="auto">||</Grid>
                 <Divider orientation='vertical' />
-                <Flex direction="column" justifyContent="space-evenly">
+                <Flex paddingLeft="0.35em" direction="column" justifyContent="space-evenly">
                   <Text paddingLeft="0.35em">{a.name}</Text>
                   {a.url ? (
                     <Link 
@@ -148,7 +191,7 @@ export default function Home() {
                   </InputGroup>}
                 </Flex>
                 <CloseIcon 
-                onClick={() => deleteTodo(a.name, a.url)}            
+                onClick={() => deleteTodo(a.name)}            
                 cursor="pointer"
                 position="absolute" 
                 right="3em" top="43px"/>
