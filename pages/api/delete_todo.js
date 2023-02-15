@@ -1,19 +1,9 @@
-import fs from "fs";
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const file = join(__dirname, 'todos.json')
+import makeshiftDB from "../../makeshift_db/memory_db";
 
 export default function handler (req, res) {
-  let json = fs.readFileSync(file);
-  json = JSON.parse(json);
-
-  for (let i = 0; i < json.todos.length; i++) {
-    if (json.todos[i].name !== req.body.name) continue;
-    json.todos.splice(i, 1);
-
-    fs.writeFileSync(file, JSON.stringify(json));
+  for (let i = 0; i < makeshiftDB.todos.length; i++) {
+    if (makeshiftDB.todos[i].name !== req.body.name) continue;
+    makeshiftDB.todos.splice(i, 1);
 
     return res.status(200).json({
         message: "success",

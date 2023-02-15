@@ -1,44 +1,16 @@
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node'
-import { join, dirname } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import makeshiftDB from "../../makeshift_db/memory_db";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const file = join(__dirname, 'todos.json')
+export default function handler (req, res) {
+  for (let i = 0; i < makeshiftDB.todos.length; i++) {
+    if (makeshiftDB.todos[i].name !== req.body.name) continue;
+    makeshiftDB.todos[i].url = req.body.url;
 
-const adapter = new JSONFile(file);
-const db = new Low(adapter);
-
-async function handler(req, res) {
-  
-  try {
-    await db.read();
-
-    db.data ||= { todos: [] }
-
-    const data = JSON.stringify({ name: req.body.name });
-    
-    if (!db.data.todos.includes(data))
-        return res.status(400).json({
-            message: "cannot find this restaurant on your list"
-        })
-    
-    const index = db.data.todos.indexOf(data);
-
-    db.data.todos[index] = JSON.stringify({ 
-        name: req.body.name, url: req.body.url 
-    });
-
-    await db.write();
-
-    res.status(200).json({
-      message: "success",
-    })
-  } catch {
-    res.status(400).json({
-      message: "error adding todo, try again"
+    return res.status(200).json({
+        message: "success",
     })
   }
-}
 
-export default handler;
+  res.status(400).json({
+    message: "that todo doesn't exist",
+  })
+}
