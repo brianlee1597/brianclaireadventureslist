@@ -20,7 +20,7 @@ async function handler(req, res) {
 
     res.status(200).json({
       message: "success",
-      detail: db.data[name],
+      details: db.data[name] || null,
     })
   } catch {
     res.status(400).json({

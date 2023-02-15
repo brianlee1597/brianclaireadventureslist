@@ -18,7 +18,7 @@ async function handler(req, res) {
 
     const data = JSON.stringify({ name: req.body.name });
     if (!db.data.todos.includes(data))
-      db.data.todos.push(data);
+      db.data.todos.unshift(data);
     
     else {
       return res.status(400).json({
