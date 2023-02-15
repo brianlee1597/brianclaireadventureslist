@@ -123,6 +123,7 @@ export default function Home() {
           <Stack direction="column" gap="0.75em" height="30em" overflowY="scroll">
             {data.todos.map((a, i) => (
               <Stack 
+              key={i}
               // onClick={() => getDetails(a.name)}
               cursor="pointer"
               position="relative"
