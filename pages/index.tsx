@@ -125,7 +125,12 @@ export default function Home(props: any) {
           <Title>Adventure List</Title>
           <InputContainer>
             <Icon />
-            <Input type="text" placeholder="Add New Item" ref={inputRef} />
+            <Input
+              type="text"
+              placeholder="Add New Item"
+              ref={inputRef}
+              onKeyUp={(e: any) => e.code === "Enter" && addItem()}
+            />
             <Add onClick={addItem}>Add</Add>
           </InputContainer>
           <List>
