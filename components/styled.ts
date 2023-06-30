@@ -1,3 +1,4 @@
+import ListItem from "@/firebase/models/listItem";
 import styled from "styled-components";
 
 const Banner = styled.div`
@@ -174,6 +175,29 @@ const Option = styled.option`
   /* Additional styles for options if needed */
 `;
 
+const ListContainer = styled.div`
+  padding: 1em 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+`;
+
+const Item = styled.div<{ status: Partial<ListItem> }>`
+  width: 100%;
+  height: 50px;
+  padding: 0 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  background-color: ${(props: any) =>
+    props.status === 1 ? "#fafafa" : "#fff"};
+  border-radius: 0.5em;
+
+  box-shadow: ${(props: any) =>
+    props.status === 1 ? "none" : "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px"};
+`;
+
 export {
   Banner,
   PageContainer,
@@ -190,4 +214,6 @@ export {
   Bottom,
   Select,
   Option,
+  ListContainer,
+  Item,
 };
