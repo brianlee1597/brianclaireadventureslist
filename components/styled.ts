@@ -230,12 +230,7 @@ const ListContainer = styled.div`
 const Item = styled.div<{ status: Partial<ListItem> }>`
   width: 100%;
   height: 50px;
-  padding: 0 1em;
-
-  font-size: 1em;
-  color: #2d2d2d;
-  font-weight: 500;
-  letter-spacing: 1px;
+  padding: 1em;
 
   display: flex;
   flex-direction: row;
@@ -247,6 +242,14 @@ const Item = styled.div<{ status: Partial<ListItem> }>`
 
   box-shadow: ${(props: any) =>
     props.status === 1 ? "none" : "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px"};
+
+  @media all and (max-width: 768px) {
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 1em;
+    height: fit-content;
+    align-items: inherit;
+  }
 `;
 
 const ItemsLeft = styled.text`
@@ -254,6 +257,68 @@ const ItemsLeft = styled.text`
   font-weight: 500;
   letter-spacing: 0.5px;
   color: #aaabb9;
+`;
+
+const ItemInput = styled.text`
+  position: relative;
+`;
+
+const ItemLogo = styled.span`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-image: url('images/todo.png'); /* Replace with your icon path */
+  background-repeat: no-repeat;
+  background-size: 25px; /* Adjust the size of the icon */
+  width: 25px; /* Adjust the width of the icon container */
+  height: 25px; /* Adjust the height of the icon container */
+}`;
+
+const ItemText = styled.text`
+  padding-left: calc(1em + 25px);
+  font-size: 1em;
+  color: #2d2d2d;
+  font-weight: 500;
+  letter-spacing: 1px;
+`;
+
+const ItemOptionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  width: fit-content;
+`;
+
+const Complete = styled.text<{ status: Partial<ListItem> }>`
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: #aaabb9;
+  border-bottom: 1px solid transparent;
+
+  transition-duration: 0.25s;
+
+  &:hover {
+    border-bottom: 1px solid
+      ${(props: any) => (props.status === 0 ? "#aaabb9;" : "transparent")};
+  }
+`;
+
+const Remove = styled.text`
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  color: #ff5733;
+
+  border-bottom: 1px solid transparent;
+
+  transition-duration: 0.25s;
+
+  &:hover {
+    border-bottom: 1px solid #ff5733;
+  }
 `;
 
 export {
@@ -277,4 +342,10 @@ export {
   Search,
   Overlay,
   ItemsLeft,
+  ItemInput,
+  ItemLogo,
+  ItemText,
+  ItemOptionContainer,
+  Complete,
+  Remove,
 };

@@ -19,10 +19,18 @@ import {
   Search,
   Overlay,
   ItemsLeft,
+  ItemInput,
+  ItemLogo,
+  ItemText,
+  ItemOptionContainer,
+  Complete,
+  Remove,
 } from "@/components/styled";
 import addObject from "@/firebase/functions/addObject";
 import createItem from "@/firebase/functions/createItem";
 import getItems from "@/firebase/functions/getItems";
+import removeItem from "@/firebase/functions/removeItem";
+import setComplete from "@/firebase/functions/setComplete";
 import ListItem from "@/firebase/models/listItem";
 import { useEffect, useRef, useState } from "react";
 
@@ -97,6 +105,43 @@ export default function Home(props: any) {
           )
         );
     }
+  };
+
+  const setCompleteItem = async (item: ListItem) => {
+    await setComplete(item);
+    const newItems = await getItems();
+
+    switch (active) {
+      case "all":
+        setItems(newItems);
+        break;
+      case "active":
+        setItems(newItems.filter((item: ListItem) => item.status === 0));
+        break;
+      case "complete":
+        setItems(newItems.filter((item: ListItem) => item.status === 1));
+    }
+
+    setAllItems(newItems);
+  };
+
+  const removeListItem = async (item: ListItem) => {
+    await removeItem(item);
+
+    const newItems = await getItems();
+
+    switch (active) {
+      case "all":
+        setItems(newItems);
+        break;
+      case "active":
+        setItems(newItems.filter((item: ListItem) => item.status === 0));
+        break;
+      case "complete":
+        setItems(newItems.filter((item: ListItem) => item.status === 1));
+    }
+
+    setAllItems(newItems);
   };
 
   useEffect(() => {
@@ -174,7 +219,19 @@ export default function Home(props: any) {
             <ListContainer>
               {items.map((item: any, i: number) => (
                 <Item key={i} status={item.status}>
-                  {item.input}
+                  <ItemInput>
+                    <ItemLogo />
+                    <ItemText>{item.input}</ItemText>
+                  </ItemInput>
+                  <ItemOptionContainer>
+                    <Complete
+                      status={item.status}
+                      onClick={() => item.status === 0 && setCompleteItem(item)}
+                    >
+                      {item.status === 0 ? "Mark as Complete" : "Completed"}
+                    </Complete>
+                    <Remove onClick={() => removeListItem(item)}>Remove</Remove>
+                  </ItemOptionContainer>
                 </Item>
               ))}
             </ListContainer>

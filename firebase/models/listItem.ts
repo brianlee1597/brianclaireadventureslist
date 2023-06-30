@@ -1,4 +1,5 @@
 export default interface ListItem {
+  id: string;
   input: string;
   important: boolean;
   location: string;

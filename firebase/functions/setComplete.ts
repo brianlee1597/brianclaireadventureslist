@@ -5,7 +5,7 @@ const db = getFirestore(firebase_app);
 
 export default async function setComplete(item: any) {
   const result = await updateDoc(doc(db, "items", item.id), {
-    status: "complete",
+    status: 1,
   });
 
   return result;
