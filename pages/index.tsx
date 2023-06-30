@@ -16,6 +16,9 @@ import {
   Option,
   ListContainer,
   Item,
+  Search,
+  Overlay,
+  ItemsLeft,
 } from "@/components/styled";
 import addObject from "@/firebase/functions/addObject";
 import createItem from "@/firebase/functions/createItem";
@@ -46,7 +49,7 @@ export default function Home(props: any) {
   const [active, setActive] = useState("all");
   const [allItems, setAllItems] = useState(props.items);
   const [items, setItems] = useState(props.items);
-  const inputRef: any = useRef(null);
+  const inputRef: any = useRef<HTMLInputElement>(null);
 
   const addItem = async () => {
     if (!inputRef?.current?.value) return;
@@ -75,6 +78,27 @@ export default function Home(props: any) {
     }
   };
 
+  const updateItems = (val: string) => {
+    switch (active) {
+      case "all":
+        setItems(allItems.filter((item: ListItem) => item.input.includes(val)));
+        break;
+      case "active":
+        setItems(
+          allItems.filter(
+            (item: ListItem) => item.status === 0 && item.input.includes(val)
+          )
+        );
+        break;
+      case "complete":
+        setItems(
+          allItems.filter(
+            (item: ListItem) => item.status === 1 && item.input.includes(val)
+          )
+        );
+    }
+  };
+
   useEffect(() => {
     if (!active || !items) return;
 
@@ -94,13 +118,14 @@ export default function Home(props: any) {
 
   return (
     <>
+      <Overlay />
       <Banner />
       <PageContainer>
         <InnerContainer>
           <Title>Adventure List</Title>
           <InputContainer>
             <Icon />
-            <Input type="text" placeholder="Enter text" ref={inputRef} />
+            <Input type="text" placeholder="Add New Item" ref={inputRef} />
             <Add onClick={addItem}>Add</Add>
           </InputContainer>
           <List>
@@ -108,31 +133,38 @@ export default function Home(props: any) {
               <Active>
                 <ActiveText
                   onClick={() => setActive("all")}
-                  style={{ color: active === "all" ? "blue" : "#aaabb9" }}
+                  style={{ color: active === "all" ? "#2d2d2d" : "#aaabb9" }}
                 >
                   All
                 </ActiveText>
                 <ActiveText
                   onClick={() => setActive("active")}
-                  style={{ color: active === "active" ? "blue" : "#aaabb9" }}
+                  style={{ color: active === "active" ? "#2d2d2d" : "#aaabb9" }}
                 >
                   Active
                 </ActiveText>
                 <ActiveText
                   onClick={() => setActive("complete")}
-                  style={{ color: active === "complete" ? "blue" : "#aaabb9" }}
+                  style={{
+                    color: active === "complete" ? "#2d2d2d" : "#aaabb9",
+                  }}
                 >
                   Done
                 </ActiveText>
               </Active>
-              <Select>
+              <Search
+                type="text"
+                placeholder="Search..."
+                onChange={(e: any) => updateItems(e.target.value)}
+              />
+              {/* <Select>
                 <Option value="">All Locations</Option>
                 {props.locations.map((location: string, i: number) => (
                   <Option key={i} value={location}>
                     {location}
                   </Option>
                 ))}
-              </Select>
+              </Select> */}
             </Filters>
             <ListContainer>
               {items.map((item: any, i: number) => (
@@ -142,7 +174,7 @@ export default function Home(props: any) {
               ))}
             </ListContainer>
             <Bottom>
-              <div>Hello</div>
+              <ItemsLeft>{items.length} items</ItemsLeft>
             </Bottom>
           </List>
         </InnerContainer>

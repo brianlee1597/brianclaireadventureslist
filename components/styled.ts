@@ -1,17 +1,32 @@
 import ListItem from "@/firebase/models/listItem";
 import styled from "styled-components";
 
+const Overlay = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 16em;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  z-index: 1;
+`;
+
 const Banner = styled.div`
   position: absolute;
   left: 0;
   right: 0;
   width: 100%;
   height: 16em;
-  background: linear-gradient(
-    90deg,
-    rgba(0, 255, 237, 1) 0%,
-    rgba(0, 84, 255, 1) 100%
-  );
+  // background: linear-gradient(
+  //   90deg,
+  //   rgba(0, 255, 237, 1) 0%,
+  //   rgba(0, 84, 255, 1) 100%
+  // );
+
+  background-image: url("images/banner.jpeg");
+  background-size: cover;
+  background-position: center;
 
   z-index: 0;
 
@@ -28,7 +43,7 @@ const PageContainer = styled.div`
   display: grid;
   place-items: center;
 
-  z-index: 1;
+  z-index: 2;
 `;
 
 const InnerContainer = styled.div`
@@ -40,7 +55,7 @@ const InnerContainer = styled.div`
   display: flex;
   flex-direction: column;
 
-  z-index: 2;
+  z-index: 3;
 `;
 
 const Title = styled.text`
@@ -71,7 +86,26 @@ const Input = styled.input`
   }
 
   &:focus-visible {
-    outline: 2px solid blue;
+    outline: 2px solid #fdfd96;
+  }
+`;
+
+const Search = styled.input`
+  width: fit-content;
+  padding: 0.5em;
+  font-size: 12px;
+  font-weigh: 400;
+  color: #777777;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #fff;
+
+  &:focus {
+    outline: none;
+  }
+
+  @media all and (max-width: 768px) {
+    width: 100%;
   }
 `;
 
@@ -122,6 +156,7 @@ const List = styled.div`
     rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
 
   padding: 0 1rem;
+  margin-bottom: 7.5em;
 `;
 
 const Filters = styled.div`
@@ -133,6 +168,12 @@ const Filters = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 0.5em 0 0.725em;
+
+  @media all and (max-width: 768px) {
+    height: 6rem;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
 `;
 
 const Bottom = styled.div`
@@ -169,6 +210,10 @@ const Select = styled.select`
   border: 1px solid #ccc;
   border-radius: 0.5em;
   background-color: #fff;
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 const Option = styled.option`
@@ -186,6 +231,12 @@ const Item = styled.div<{ status: Partial<ListItem> }>`
   width: 100%;
   height: 50px;
   padding: 0 1em;
+
+  font-size: 1em;
+  color: #2d2d2d;
+  font-weight: 500;
+  letter-spacing: 1px;
+
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -196,6 +247,13 @@ const Item = styled.div<{ status: Partial<ListItem> }>`
 
   box-shadow: ${(props: any) =>
     props.status === 1 ? "none" : "rgba(0, 0, 0, 0.05) 0px 0px 0px 1px"};
+`;
+
+const ItemsLeft = styled.text`
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  color: #aaabb9;
 `;
 
 export {
@@ -216,4 +274,7 @@ export {
   Option,
   ListContainer,
   Item,
+  Search,
+  Overlay,
+  ItemsLeft,
 };
